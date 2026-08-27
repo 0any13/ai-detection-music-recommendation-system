@@ -4,6 +4,10 @@ __pycache__/
 *.pyo
 .vscode/
 logs/*.json
+ai_artists_blacklist.csv
+ground_truth.json
+rec_annotations.json
+environment.yml
 
 data/
 models/
