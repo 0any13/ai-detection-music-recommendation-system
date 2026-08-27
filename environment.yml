@@ -67,4 +67,3 @@ dependencies:
   - pip:
       - musicbrainzngs
 
-prefix: C:\Users\hecto\.conda\envs\musicrec
