@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGNAL // human music finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!--animated background layers -->
+  <div class="bg-mesh"></div>
+  <div class="bg-grain"></div>
+  <div class="bg-scanlines"></div>
+
+  <!--top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-mark">SIGNAL</span>
+      <span class="brand-tag">// human music finder</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="meta-pill" id="meta-status">
+        <span class="meta-dot"></span> idle
+      </span>
+    </div>
+  </header>
+
+  <!-- main centered search -->
+  <main class="stage">
+    <section class="hero" id="hero">
+      <h1 class="hero-title">
+        <span class="line1">is your song</span>
+        <span class="line2"><em>real</em>?</span>
+      </h1>
+      <p class="hero-sub">
+        Paste a Spotify or YouTube link, or type a song name.<br>
+        We check for AI generation and suggest human-made alternatives.
+      </p>
+
+      <form id="check-form" class="search-form" autocomplete="off">
+        <div class="search-shell">
+          <span class="search-prompt">&gt;</span>
+          <input
+            id="query"
+            type="text"
+            name="query"
+            placeholder="spotify.com/track/... or youtube.com/watch... or just a song name"
+            required
+            spellcheck="false"
+            autofocus
+          >
+          <button type="submit" class="search-btn" id="check-btn">
+            <span class="btn-text">analyze</span>
+            <span class="btn-arrow">&rarr;</span>
+          </button>
+        </div>
+        <div class="search-hints">
+          <span class="hint-chip" data-fill="https://open.spotify.com/track/5tRaYLuFT6Cl3nitvKfSkY">try a Spotify AI track</span>
+          <span class="hint-chip" data-fill="i am a woman sarah jane morris">try a human song</span>
+          <span class="hint-chip" data-fill="https://youtu.be/OURH86ItpZg">try a YouTube link</span>
+        </div>
+      </form>
+    </section>
+
+    <!--search-resolution picker (shown when free-text matches are ambiguous) -->
+    <section class="picker" id="picker" hidden>
+      <div class="picker-inner">
+        <div class="picker-head">
+          <span class="picker-eyebrow">DID YOU MEAN&hellip;</span>
+          <span class="picker-query" id="picker-query"></span>
+        </div>
+        <div class="picker-cards" id="picker-cards"></div>
+        <div class="picker-footer">
+          <button class="picker-cancel" id="picker-cancel">cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!--results region (hidden until first analysis) -->
+    <section class="results" id="results" hidden>
+      <div class="results-grid">
+
+        <!--left: track card -->
+        <div class="card track-card" id="track-card">
+          <div class="card-label">TRACK</div>
+          <div class="track-art">
+            <div class="track-art-placeholder">
+              <span class="loader-dots"><span></span><span></span><span></span></span>
+            </div>
+            <img id="track-img" alt="" hidden>
+          </div>
+          <div class="track-meta">
+            <div class="track-title" id="track-title">resolving...</div>
+            <div class="track-artist" id="track-artist">&nbsp;</div>
+            <div class="track-platform" id="track-platform">&nbsp;</div>
+          </div>
+          <div class="track-embed" id="track-embed"></div>
+        </div>
+
+        <!--center: AI gauge -->
+        <div class="card gauge-card" id="gauge-card">
+          <div class="card-label">AI DETECTION</div>
+          <div class="gauge-wrap">
+            <svg class="gauge" viewBox="0 0 240 240" aria-hidden="true">
+              <defs>
+                <linearGradient id="gauge-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="var(--accent-cyan)"/>
+                  <stop offset="60%" stop-color="var(--accent-magenta)"/>
+                  <stop offset="100%" stop-color="var(--accent-amber)"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <!--background ring -->
+              <circle class="gauge-bg" cx="120" cy="120" r="100"
+                      fill="none" stroke-width="14"/>
+              <!--progress ring (starts at top, sweeps clockwise) -->
+              <circle class="gauge-fg" id="gauge-fg" cx="120" cy="120" r="100"
+                      fill="none" stroke-width="14" stroke-linecap="round"
+                      stroke="url(#gauge-grad)" filter="url(#glow)"
+                      transform="rotate(-90 120 120)"/>
+              <!--tick marks -->
+              <g class="gauge-ticks" id="gauge-ticks"></g>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-pct" id="gauge-pct">--</div>
+              <div class="gauge-unit" id="gauge-unit">scanning</div>
+            </div>
+          </div>
+          <div class="gauge-verdict" id="gauge-verdict">awaiting signal</div>
+          <div class="gauge-detail" id="gauge-detail">&nbsp;</div>
+
+          <!--cover-art AI sub-gauge: informational, does NOT affect the audio score -->
+          <div class="cover-divider"></div>
+          <div class="card-label cover-label">COVER ART (CONTEXT ONLY)</div>
+          <div class="cover-wrap" id="cover-wrap">
+            <svg class="cover-gauge" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="cover-bg" cx="60" cy="60" r="50"
+                      fill="none" stroke-width="9"/>
+              <circle class="cover-fg" id="cover-fg" cx="60" cy="60" r="50"
+                      fill="none" stroke-width="9" stroke-linecap="round"
+                      stroke="var(--accent-cyan)"
+                      transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="cover-center">
+              <div class="cover-pct" id="cover-pct">--</div>
+            </div>
+          </div>
+          <div class="cover-verdict" id="cover-verdict">awaiting cover</div>
+          <div class="cover-note">
+            AI-generated covers are pretty common among starter artists and in this instance
+            do not affect the audio score above. A human-made cover suggests a human track; 
+            an AI cover is not enough evidence for the opposite on its own.
+          </div>
+        </div>
+
+        <!-- Right: progress log -->
+        <div class="card log-card" id="log-card">
+          <div class="card-label">SYSTEM LOG</div>
+          <ol class="log-list" id="log-list"></ol>
+        </div>
+
+      </div>
+
+      <!-- "show me recs anyway" button (only appears for human verdict) -->
+      <div class="force-recs-prompt" id="force-recs-prompt" hidden>
+        <p class="force-recs-msg">This track reads as human-made. Want similar human recommendations anyway?</p>
+        <button id="force-recs-btn" class="force-recs-btn">
+          <span class="btn-text">show similar tracks</span>
+          <span class="btn-arrow">&rarr;</span>
+        </button>
+      </div>
+
+      <!--recommendations as disc grid -->
+      <div class="recs-section" id="recs-section" hidden>
+        <div class="recs-header">
+          <span class="recs-label">HUMAN-MADE ALTERNATIVES</span>
+          <span class="recs-count" id="recs-count">0</span>
+        </div>
+        <ul class="recs-grid" id="recs-list"></ul>
+        <div class="recs-empty" id="recs-empty" hidden>
+          No alternatives surfaced this round. Try another track.
+        </div>
+        <div class="recs-quota-error" id="recs-quota-error" hidden>
+          <div class="recs-quota-icon">!</div>
+          <div class="recs-quota-body">
+            <div class="recs-quota-title">AI verification quota exhausted</div>
+            <div class="recs-quota-msg">
+              The daily LetsSubmit API limit has been reached, so we can't
+              verify whether candidate tracks are human-made.
+              <br>
+              No unverified recommendations are shown. The quota resets at
+              <strong>02:00 UTC</strong>, after which a new Analyze run will retry.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- vinyl player lives at the bottom of the document,
+           visible after scrolling past recommendations -->
+      <div class="vinyl-player" id="vinyl-player" data-state="idle">
+        <div class="vinyl-player-inner">
+          <div class="vinyl-stage">
+            <img class="vinyl-base" src="{{ url_for('static', filename='img/vinyl_player.png') }}" alt="">
+            <!-- album art spins on top of the existing center area -->
+            <div class="vinyl-spinner" id="vinyl-spinner">
+              <div class="vinyl-art" id="vinyl-art"></div>
+              <div class="vinyl-art-pin"></div>
+            </div>
+          </div>
+          <div class="vinyl-meta">
+            <div class="vinyl-status">
+              <span class="vinyl-status-dot"></span>
+              <span class="vinyl-status-text" id="vinyl-status-text">no disc loaded</span>
+            </div>
+            <div class="vinyl-now-title" id="vinyl-now-title">&mdash;</div>
+            <div class="vinyl-now-artist" id="vinyl-now-artist">&mdash;</div>
+            <div class="vinyl-controls">
+              <button class="vinyl-ctrl" id="vinyl-stop" aria-label="stop" disabled>
+                <span class="vinyl-ctrl-label">stop</span>
+              </button>
+              <a class="vinyl-ctrl vinyl-ext" id="vinyl-external" target="_blank" rel="noopener" hidden>
+                <span class="vinyl-ctrl-label">open original &rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--floating audio widget (corner notification with embed player) -->
+  <div class="audio-corner" id="audio-corner" hidden>
+    <div class="audio-corner-head">
+      <span class="audio-corner-label" id="audio-corner-label">PLAYING ON</span>
+      <button class="audio-corner-close" id="audio-corner-close" aria-label="close">&times;</button>
+    </div>
+    <div class="audio-corner-host" id="audio-corner-host"></div>
+    <div class="audio-corner-hint" id="audio-corner-hint">click play in the widget &uarr;</div>
+  </div>
+
+  <footer class="footer">
+    <span>SIGNAL &middot; bachelor's thesis prototype</span>
+    <span class="footer-meta" id="footer-meta">build {{ '%s'|format(2026) }}</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

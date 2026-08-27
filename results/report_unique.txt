@@ -1,0 +1,595 @@
+
+========================================================================
+  MUSIC RECOMMENDATION SYSTEM -- EXPERIMENT RESULTS
+========================================================================
+    Bachelor's Thesis Analysis Report
+
+
+========================================================================
+  1. DATASET OVERVIEW
+========================================================================
+      -> unique AI songs (dedup)               110
+      -> unique human songs (dedup)            110
+    Total job logs                             220
+    Labeled (ground truth present)             220
+      -> AI-generated songs                    110
+      -> Human-made songs (controls)           110
+    Unlabeled (no ground truth entry)          0
+
+  Genre Distribution
+  --------------------
+    Genre                    AI    Human
+  --------------------------------------------------------------------
+                             110     110
+
+  Submission Platform
+  ---------------------
+    search                                     96
+    spotify                                    76
+    youtube                                    48
+
+========================================================================
+  2. AI DETECTION SYSTEM EVALUATION
+========================================================================
+
+    The detection system assigns a probability p that a submitted track is AI-generated.
+    The binary threshold is p >= 35.0% = predicted AI, p < 35.0% = predicted human.
+
+  Confusion Matrix  (threshold = 35.0%)
+  ---------------------------------------
+    True  Positives  -- AI correctly flagged as AI 91
+    True  Negatives  -- Human correctly cleared 91
+    False Positives  -- Human incorrectly flagged 19
+    False Negatives  -- AI missed by the system 19
+
+  Classification Metrics
+  ------------------------
+    n (labeled with probability score)         220
+    Accuracy                                   0.8273  (82.7%)
+    Precision                                  0.8273
+    Recall (Sensitivity / TPR)                 0.8273
+    Specificity (TNR)                          0.8273
+    False Positive Rate                        0.1727
+    F1 Score                                   0.8273
+    AUC-ROC (trapezoidal)                      0.8776
+
+  Probability Score Distribution
+  --------------------------------
+    AI songs (ground truth = AI generated):
+      n                110
+      mean             65.58%
+      stdev            29.53%
+      min/max          0.00% / 99.56%
+
+    Human songs (ground truth = human made):
+      n                110
+      mean             19.43%
+      stdev            18.04%
+      min/max          0.00% / 78.19%
+
+  AI Probability Histogram (all labeled logs, 0-100%)
+  -----------------------------------------------------
+      0.0-10.0   | ############################ 52
+     10.0-20.0   | ################             31
+     20.0-30.0   | ###########                  22
+     30.0-40.0   | #######                      13
+     40.0-50.0   | #####                        11
+     50.0-60.0   | ########                     16
+     60.0-70.0   | #######                      14
+     70.0-80.0   | #######                      14
+     80.0-90.0   | #########                    18
+     90.0-100.0  | ###############              29
+
+  Cover Art AI Detection (Sightengine)
+  --------------------------------------
+    Threshold for cover art: 50.0% AI probability.
+
+    Logs with cover art check data             181
+    TP / TN / FP / FN                          70 / 100 / 0 / 11
+    Accuracy                                   0.9392
+    Precision                                  1.0000
+    Recall                                     0.8642
+    F1                                         0.9272
+    AUC-ROC                                    0.9438
+
+  Per-Log Detail (labeled logs)
+  -------------------------------
+    Artist                         Genre     True   Pred   Prob(%)
+  --------------------------------------------------------------------
+    Masters of Prophecy                       AI      AI      58.6
+    Mezcaleros                                AI      AI      98.6
+    Mezcaleros                                AI      AI      94.7
+    Ragal Ironbull                            AI      AI      50.9
+    DJ DIRTY J                                AI      AI      64.4
+    PcP Films                                 AI      Human   0.0
+    Ragal Ironbull                            AI      AI      87.3
+    Raven Astrid                              AI      AI      95.4
+    Myron Vex                                 AI      Human   0.0
+    Myron Vex                                 AI      Human   16.0
+    Myron Vex                                 AI      AI      94.1
+    Iron Jarl                                 AI      AI      67.9
+    Sigurd Skull-Splitter                     AI      AI      76.8
+    Runa                                      AI      AI      98.6
+    TLCREATIVE                                AI      AI      96.4
+    TLCREATIVE                                AI      AI      98.4
+    1960 SoulClub                             AI      AI      51.7
+    JERRY'S SOUND ROOM                        AI      AI      69.6
+    Nyla Stone                                AI      AI      88.9
+    hollynort                                 AI      AI      79.3
+    Enlly Blue                                AI      AI      83.3
+    Kanye West                                Human   Human   4.7
+    Cottonfield Blues                         AI      AI      80.4
+    Elowine                                   AI      AI      65.1
+    Ladies and Gentlemen                      AI      AI      67.4
+    Luna Sole                                 AI      AI      80.1
+    Eddie Gold                                AI      Human   32.3
+    Eddie Gold                                AI      AI      50.1
+    LCD Soundsystem                           Human   Human   5.6
+    If Rappers Made Blues                     AI      AI      60.9
+    Whiskey Hip-Hop                           AI      AI      86.2
+    Zay Rock                                  AI      AI      73.7
+    Warren Macoo                              AI      AI      70.4
+    TLCREATIVE                                AI      AI      92.2
+    FazerleX                                  AI      AI      83.8
+    Artificial Individual                     AI      AI      67.3
+    Peter Gsteu                               AI      AI      39.4
+    Peter Gsteu                               AI      Human   23.6
+    Peter Gsteu                               AI      AI      89.9
+    Scott Coates Music                        AI      AI      57.4
+    Scott Coates Music                        AI      AI      92.2
+    Jax Raven                                 AI      AI      49.2
+    The Seal Voices                           AI      AI      93.8
+    Natural Stupidity                         AI      AI      50.8
+    Saga Lore AI                              AI      AI      91.0
+    Burning Babylon                           AI      AI      96.9
+    Lion in Zion                              AI      Human   27.7
+    Lion in Zion                              AI      AI      63.8
+    Lolita                                    AI      AI      77.1
+    Ascend Vocals                             AI      Human   0.0
+    Sadie Winters                             AI      Human   0.0
+    Ascend Vocals                             AI      AI      97.2
+    Dean Snowfield                            AI      Human   12.0
+    Dean Snowfield                            AI      Human   11.2
+    Dean Snowfield                            AI      Human   14.7
+    Velvet Rebellion                          AI      AI      97.9
+    Velour Doom                               AI      AI      93.5
+    Kelly Boesch                              AI      AI      52.9
+    The Velvet Sundown                        AI      AI      65.1
+    AI Emo Kids                               AI      AI      35.4
+    Paulina                                   Human   AI      78.2
+    Intimate Vibes                            AI      AI      39.7
+    Soul`s Cry                                AI      Human   0.0
+    Soul`s Cry                                AI      AI      94.0
+    GHØSTARCADE                               AI      AI      48.4
+    The Roux                                  AI      AI      47.9
+    Molotov Teknomotive                       AI      AI      66.2
+    Deathly Hours                             AI      AI      90.9
+    The Pirx                                  AI      Human   15.2
+    The Pirx                                  AI      Human   5.4
+    The Pirx                                  AI      AI      72.0
+    The Low Stakes Band                       Human   Human   20.7
+    The Low Stakes Band                       Human   AI      39.9
+    MAVIRA                                    AI      AI      91.8
+    MAVIRA                                    AI      AI      96.9
+    ኢታ ሱርታቲ                                   AI      AI      74.5
+    Mellow Puff Collective                    AI      AI      82.7
+    Lady-Silent                               AI      AI      87.3
+    Maxime Giroux                             AI      Human   6.9
+    CAELIS                                    AI      AI      63.6
+    Hello It's Ready                          AI      AI      87.9
+    Asiq                                      AI      AI      93.5
+    Incubus                                   Human   Human   24.0
+    Rise Against                              Human   Human   24.5
+    Gogol Bordello                            Human   Human   6.5
+    Telefon Tel Aviv                          Human   Human   0.0
+    Miley Cyrus                               Human   Human   15.7
+    Maroon 5                                  Human   AI      35.9
+    Owl City                                  Human   Human   11.3
+    Yann Tiersen                              Human   Human   16.8
+    Harry Gregson-Williams                    Human   Human   14.3
+    Néstor Torres                             Human   Human   18.0
+    SOJA                                      Human   Human   31.2
+    Green Day                                 Human   Human   22.1
+    Shantel                                   Human   Human   2.5
+    Crazy Town                                Human   Human   11.6
+    Anthrax                                   Human   Human   5.2
+    The Crystal Method                        Human   Human   29.4
+    Akcent                                    Human   AI      59.0
+    Tom Burbank                               Human   Human   24.6
+    Silver Mt. Zion                           Human   Human   4.0
+    Ryuichi Sakamoto                          Human   Human   12.7
+    Ludovico Einaudi                          Human   Human   6.2
+    Andrea Bocelli                            Human   Human   7.8
+    Bauhaus                                   Human   Human   16.3
+    The Crüxshadows                           Human   Human   26.2
+    Sarah Jane Morris                         Human   Human   4.5
+    Louis Smith                               Human   AI      53.3
+    João Gilberto                             Human   Human   15.3
+    The Velvet Sundown                        AI      Human   8.9
+    Sierra Jade                               AI      AI      96.5
+    The Velvet Sundown                        AI      AI      83.8
+    Nina Blaze                                AI      AI      56.5
+    Nina Blaze                                AI      AI      73.6
+    Enlly Blue                                AI      AI      89.4
+    Royalle                                   AI      AI      86.7
+    MUSIC HUB                                 AI      AI      97.1
+    Dub King                                  AI      AI      51.8
+    PsychWitch                                AI      Human   25.3
+    PsychWitch                                AI      AI      97.0
+    PsychWitch                                AI      AI      77.5
+    GROTESTIQUE                               AI      AI      79.1
+    Lydia Wren                                AI      AI      70.8
+    Perfectly ImperfeKt                       AI      AI      53.4
+    Harap                                     AI      AI      45.4
+    EKOSPIR                                   AI      AI      96.6
+    Holy Jazz Vibes                           AI      AI      84.0
+    The Metal Goths                           AI      AI      97.6
+    Juno Skye                                 AI      AI      66.0
+    GrooveBoom                                AI      AI      67.1
+    Pagan Wiccan Folk                         AI      AI      84.3
+    V'arc                                     AI      AI      48.0
+    Tuan Gia                                  AI      AI      99.6
+    ECTRU                                     AI      AI      99.3
+    Rúnvyr                                    AI      AI      96.4
+    AngelofAnarchy                            AI      AI      91.0
+    The Pirx                                  AI      Human   29.7
+    The Pirx                                  AI      AI      40.8
+    The Pirx                                  AI      Human   32.0
+    Anne Bloom                                AI      AI      90.0
+    Starfield                                 Human   Human   6.5
+    Story Of The Year                         Human   Human   32.3
+    One Foot On The Path                      Human   Human   0.0
+    Kenny Wayne Shepherd                      Human   Human   21.3
+    Chromeo                                   Human   Human   3.7
+    The Almost                                Human   Human   11.5
+    Chromeo                                   Human   Human   2.2
+    AFI                                       Human   Human   11.4
+    Hombres G                                 Human   Human   9.4
+    The Storm Is Over Now                     Human   Human   0.0
+    Horse Feathers                            Human   Human   8.1
+    Thousand Foot Krutch                      Human   Human   28.7
+    Ryan Adams                                Human   Human   19.0
+    Caribou                                   Human   Human   16.2
+    Mud                                       Human   Human   4.0
+    Bloc Party                                Human   Human   13.5
+    Dave Matthews Band                        Human   Human   3.3
+    Amon Amarth                               Human   Human   2.4
+    Iration                                   Human   Human   8.7
+    Bersuit Vergarabat                        Human   Human   9.4
+    Paula Cole                                Human   Human   24.7
+    Easy Star All-Stars                       Human   Human   32.5
+    Charly García                             Human   Human   5.1
+    Silk                                      Human   Human   10.0
+    Ratatat                                   Human   Human   13.0
+    Bitter:Sweet                              Human   Human   13.6
+    The Clancy Brothers                       Human   Human   1.0
+    Slightly Stoopid                          Human   AI      55.8
+    Craig Morgan                              Human   Human   8.2
+    Kalle Baah                                Human   Human   3.8
+    Ashton Shepherd                           Human   Human   7.7
+    Desiderii Marginis                        Human   Human   6.0
+    Foals                                     Human   Human   4.7
+    CAKE                                      Human   Human   3.4
+    Morcheeba                                 Human   Human   6.4
+    The Corrs                                 Human   Human   14.1
+    Boston                                    Human   Human   28.7
+    Cat Power                                 Human   Human   9.8
+    Kelly Price                               Human   AI      76.7
+    Saosin                                    Human   AI      43.7
+    Alison Krauss                             Human   Human   0.0
+    AYO ^                                     Human   AI      43.9
+    Blake Shelton                             Human   Human   14.4
+    Bad Company                               Human   Human   18.0
+    Eliza Doolittle                           Human   Human   21.8
+    Francisca Valenzuela                      Human   Human   16.8
+    Emilíana Torrini                          Human   AI      51.6
+    Sohodolls                                 Human   Human   4.0
+    Blind Pilot                               Human   AI      38.8
+    Eagles                                    Human   Human   12.6
+    Suzanne Vega                              Human   AI      47.6
+    David Bromberg                            Human   Human   19.6
+    Equilibrium                               Human   AI      43.1
+    Jeckyll & Hyde                            Human   Human   8.3
+    Silversun Pickups                         Human   AI      45.7
+    The Coral                                 Human   AI      73.4
+    Freaky Chakra                             Human   Human   1.7
+    Patrick Watson                            Human   Human   21.2
+    Midlake                                   Human   Human   21.6
+    TOOL                                      Human   Human   3.7
+    Dum Dum Girls                             Human   AI      65.7
+    Soda Stereo                               Human   Human   3.8
+    Robbie Williams                           Human   AI      40.0
+    Jan De Wilde                              Human   Human   9.7
+    Smokie Norful                             Human   Human   22.7
+    Converge                                  Human   AI      54.2
+    Mavado                                    Human   Human   29.7
+    Clint Mansell                             Human   Human   22.0
+    Kal                                       Human   AI      55.3
+    Russkaja                                  Human   Human   4.5
+    Robert Schumann                           Human   Human   7.6
+    Kâzım Koyuncu                             Human   Human   26.4
+    VenoVerz                                  AI      AI      36.0
+    Ol' Dirty Bastard                         Human   Human   3.4
+    Westside Connection                       Human   Human   17.2
+    JahBeard                                  AI      AI      84.7
+    Emery                                     Human   Human   13.3
+    New Young Pony Club                       Human   Human   6.8
+    (Hed) P.E.                                Human   Human   14.9
+    Sébastien Tellier                         Human   Human   3.4
+
+========================================================================
+  3. RECOMMENDATION PIPELINE PERFORMANCE
+========================================================================
+    Total logs                                 220
+    Completed (done)                           220
+    Errored                                    0
+    Incomplete / other                         0
+
+  Job Duration (seconds)
+  ------------------------
+    n                                          220
+    Mean                                       240.1s
+    Median                                     78.6s
+    Stdev                                      362.5s
+    Min                                        0.0s
+    Max                                        2405.7s
+
+  Duration Histogram
+  --------------------
+      0.0-240.7  | ############################ 159
+    240.7-481.3  | ####                         25
+    481.3-722.0  | ##                           13
+    722.0-962.7  | ##                           12
+    962.7-1203.3 |                              5
+    1203.3-1444.0 |                              3
+    1444.0-1684.7 |                              0
+    1684.7-1925.4 |                              1
+    1925.4-2166.0 |                              1
+    2166.0-2406.7 |                              1
+
+  Recommendation Source Breakdown
+  ---------------------------------
+    Jobs using Hybrid recommender (MSD + CF)   88   (40.0%)
+    Jobs using Spotify Discovered-On fallback  78   (35.5%)
+    Jobs using YouTube fallback                25   (11.4%)
+    Jobs where input track found in MSD        88   (40.0%)
+
+  Recommendations per Job
+  -------------------------
+    Mean                                       7.6
+    Median                                     10.0
+    Jobs achieving target (>=10 recs)          141
+    Jobs below target (<10 recs)               37
+    Jobs with zero recommendations             42
+
+  AI Detection Latency (LetsSubmit call, seconds)
+  -------------------------------------------------
+    n                                          181
+    Mean                                       4.2s
+    Median                                     4.1s
+    Min                                        1.1s
+    Max                                        10.1s
+
+  Hybrid Recommender Execution Time (seconds)
+  ---------------------------------------------
+    n                                          88
+    Mean                                       34.7s
+    Median                                     41.0s
+    Min                                        1.1s
+    Max                                        83.1s
+
+  API Quota
+  -----------
+    Jobs where LetsSubmit quota was exhausted  3 / 220
+
+  LetsSubmit Cache Effectiveness
+  --------------------------------
+    Cache hits                                 39
+    Cache misses                               181
+    Hit rate                                   17.73%
+
+========================================================================
+  4. RECOMMENDATION PURITY
+========================================================================
+    Purity measures what fraction of the system's recommendations are
+    confirmed human-made music (not AI-generated).
+
+  Volume
+  --------
+    Total recommendations across all jobs      1677
+    Unique recommended artists                 1159
+
+  Purity by Recommendation Source
+  ---------------------------------
+    Source                   n     Human  AI    AI rate
+  --------------------------------------------------------------------
+    Hybrid (MSD+CF)          0     0      0     n/a
+    Spotify Discovered-On    1514  1415   99    6.5%
+    YouTube fallback         163   83     80    49.1%
+
+  Annotation Coverage
+  ---------------------
+    Confirmed human                            1498  (89.3%)
+    Confirmed AI                               179    (10.7%)
+    Not yet annotated                          0     (0.0%)
+
+  Purity (annotated recommendations only)
+  -----------------------------------------
+    Confirmed human                            1498
+    Confirmed AI (filter bypass)               179
+    Purity                                     0.8933  (89.3% of annotated are human)
+
+  Annotation Method Breakdown
+  -----------------------------
+    manual                                     1676
+    blacklist                                  1
+
+  AI Recommendations That Bypassed the Human Filter
+  ---------------------------------------------------
+    [!] These represent false negatives of the recommendation filter.
+
+      GoldenRockStation                   Turn The Lights Off (90's Metal)
+      Kiraa                               don't look back
+      Kiraa                               stay right here with you
+      Elvira                              Insane
+      Kiraa                               don't know you
+      Kiraa                               why i feel this way
+      Elvira                              Break Away
+      Kiraa                               i don't wanna do this anymore
+      Elvira                              Something I'm Not
+      Kiraa                               something real
+      Elvira                              Gangster Love
+      UTP                                 UTP - Night Shift (Bass & Drift) (Bass Boosted)
+      Deadfolk Prophet                    HIGH HONEY DRIP
+      Country Lunatic                     Clean but Never Free
+      Georgia Phantom                     Built From Broken
+      Habib Ice                           Rise or die
+      LEMONEX                             We Set The Free
+      Naytiiv Tongue                      Exile
+      Naytiiv Tongue                      We Move Together
+      Naytiiv Tongue                      Forever Depends
+      Doc Raven                           Outlaw Heaven
+      Viggo Ironside                      In The Breach
+      Backroad and Harmony                Jelly Roll – Heaven Took You Early (NEW SONG 2026) | Country Song About Pain and Remembering You
+      Dust & Harmony                      You Problem
+      Britney Spears                      Britney Spears - Everytime (Epic Cinematic Orchestral Cover) | Haunting Solo Male Vocal - NovaTunes
+      Austin Blanchfill                   I RUN TO YOUR LIGHT
+      Oryn Etheria                        The Day Questions Began
+      TMH                                 TMH - Mafia Style [GANGSTER TRAP]
+      HUGEL x SOLTO                       HUGEL x SOLTO - Jamaican (Bam Bam… x Madonna - La Isla Bonita (Coffee Afro House Mashup)
+      Version longue de la musique DJ 1900 Version longue de la musique DJ 1900 - Monte le son 🔥
+      Kowshik Saha                        Beggin'
+      CosmicJelly                         Summer Days
+      Eliana Freya                        Sin Miedo A Querer
+      Talisa Nayra                        In te perdo meas vias
+      Talisa Nayra                        Baila Conmigo
+      The Jazz House                      Room Without a Clock - 1940s Jazz
+      The Jazz House                      Last Call Philosophy
+      The Jazz House                      Waves Upon My Heart - 1940s Jazz
+      The Jazz House                      Krieg und Liebe - 1940s German Jazz
+      The Jazz House                      Ivresse à la Tour Eiffel - 1940s French Jazz
+      Shifty Brent                        Superman - Soul Cover
+      Soul'd Out                          Many Men - 1950's Soul Version
+      Soul'd Out                          In Da Club - 1950's Soul Version
+      Soul'd Out                          Gangsta's Paradise - 1950's Soul Version
+      Soul'd Out                          Forgot About Dre - 1950's Soul Version
+      Soul'd Out                          Changes - 1950's Soul Version
+      Crystal Sound Studios               Many Men (Blood in my eye)
+      Shifty Brent                        California Love – 1950's Soul (Speed Up)
+      Soul'd Out                          Dear Mama - 1950's Soul Version
+      Matthew Kalyani                     Shadow of My Own Heart
+      FazerleX                            Still Me
+      MAELOU VISION                       ZAY-Rock Button Ft.Lu1Gang
+      Dethlord                            THE BEST PART OF MY DAY IS FUCKING YOURS UP
+      SNY                                 SNY - Wolves Don't Sleep
+      FLORÉN FLO Beats                    SCARFACE (Original Version)
+      MOW                                 MOW - LOCK IT DOWN (GANGSTER TRAP)
+      Upper Vibe Media Presents           Neural Drip (feat. iami)
+      Crow Wilder                         America Baby
+      JD Steel                            Tell The Devil I'm Busy
+      Peter Gsteu                         Winter Is Coming
+      Peter Gsteu                         I'm All In
+      Peter Gsteu                         Bullet in My Head
+      Peter Gsteu                         It's Raining
+      Peter Gsteu                         Love's a Crime Scene
+      Skate Avenue PH                     Love Moves in Mysterious Ways
+      Skate Avenue PH                     Let Me Be the One
+      Skate Avenue PH                     Once in a Lifetime
+      Skate Avenue PH                     Don't Dream It's Over
+      Skate Avenue PH                     I'll Be
+      Skate Avenue PH                     Never Had a Dream Come True
+      Thirdzy                             Mr. Kupido, Mahal Ka Sa Akin, I Need You - Medley - Rock Version
+      Freedom Prisoner                    Freedom Prisoner - Override: Humanity (Alternative Rock Demo)
+      Pandemonic Vibes                    Pandemonic Vibes - Synthetic Feelings (Official Music Video) - Industrial Music About AI Dating
+      Bourbon Sons                        Thunderstruck
+      Game of Thrones                     Game of Thrones - A Song of Napalm (Parody Music Video)
+      Lord of the Rings                   Lord of the Rings - The Fellowship of 'Nam (Parody Music Video)
+      Pirates of the Caribbean            Pirates of the Caribbean - The Curse of 'Nam (Parody Music Video)
+      Harry Potter                        Harry Potter - Biker Wizard (Parody Music Video)
+      Breaking Bad                        Breaking Bad - I Am The Napalm (Parody Music Video)
+      Avengers                            Avengers - Vietnam War (Parody Music Video)
+      James Bond                          James Bond - Rednecks are Forever (Adult Music Video)
+      “The Velvet Testimony”              "Loving Me"
+      Velvet Sky                          I'm Good Where I’m Going
+      Xania Monet                         I asked for so little
+      Christian Love Songs                Meant to Be (God’s Timing) – A Christian R&B Love Song About Divine Timing
+      DEADLUVE                            Heavy
+      Obsidian Swing                      Breathing My Last
+      Ashes of Eden                       New Day
+      HEARTVOID                           I Let You Fade
+      Lunar Horizon                       The Last Sigh of Earth
+      ZeLeo                               Your Hug
+      ZeLeo                               Strange Nights
+      redfeel                             Into the Dark
+      Smoke Mood                          Gondel Hour
+      Ladies and Gentlemen                Continuity, Without Unity - 1940's Jazz Vintage & Retro Jazz Bar
+      Vivian Sky                          Lost In Your Eyes
+      Lunelle                             A Nobile Lie
+      catchiblow                          Je te remercie
+      Ronnie OBriant                      I Am What They Made Me
+      Secret Crowd                        Secret Crowd - Nothing to Lose
+      Shiv                                Shiv - Last Farewell (Official Music) Rock
+      Dead On The Inside                  Dead On The Inside - I Watched You Break [Official Lyric Video]
+      FraytasticMusic                     Into the Sky
+      Airdenix                            Airdenix - Echoes Arrive (Official Video)
+      Maphra                              Doomed
+      Maphra                              lovely (re-imagined)
+      Varian Vel'Aryn                     Souls on Fire
+      “Under The Veil”                    “Under The Veil” - Crimson Veins music video
+      “Cold Glass”                        “Cold Glass” - Nocturne Alley music video
+      WeiRo                               WeiRo - Never There  ( Official Audio )
+      Velvet Gloom                        CRY BY VELVET GLOOM / Dark & Melancholic Music Mix
+      BREAKABLE / Velvet Gloom            BREAKABLE / Velvet Gloom - Dark & Melancholic Music Mix
+      CARMILLA VEYNE                      CARMILLA VEYNE - Manifest | Gothic Metal Female Vocalist
+      Nova 76                             My Name
+      I Hate You                          I Hate You - Velvet Gloom | Gothic Metal Female Vocals
+      Highway to Hell                     Highway to Hell - Velvet Gloom | Gothic Metal Female Vocals
+      Linny Maria                         Linny Maria - Honest Lies (Gothic Metalstep)
+      MHWO Official                       Black Eyes-Fire Light (Official Music Video)
+      Babylon Still Cries                 Close the Door After Me | Babylon Still Cries
+      Afrøtelize                          Say It Right - Cover
+      1980s Soul Blues                    Always For You
+      Echoe's Of Soul's                   I Love You Anyway | Soul Blues Icons (1950's Style) | Smooth & Timeless Blues | Vintage Classics
+      Can’t Hold You, Can’t Let Go        Can’t Hold You, Can’t Let Go - New Old Blues
+      Vilin Castar                        End of the Line
+      Anthony Q.                          Try Loving Me
+      Crossroads Legends                  Black Smoke Rolling
+      R4YA                                Forever Young (Acoustic Blues)
+      Barrett Stone                       San Francisco – Scott McKenzie | Slow Rock Cover (Timeless Classic Vibes) | BARRET STONE
+      Stevie Ray Vaughan                  Stevie Ray Vaughan - Pride and Joy (Noni Motto Session)
+      FaithRock                           Don’t Let Me Down (The Beatles) – Modern Blues Rock Cover
+      Lâle                                I Don't Want to Talk About It (Blues Rock)
+      Delta Blues Brother                 Stupid Don’t Learn | Delta Whiskey Blues | Delta Blues Brother
+      MAGICAL T                           Kiss and Say Goodbye (Blues Rock)
+      ORGAVSM                             Your Kind of Love
+      Thirdzy                             Renegade Stories - Tadhana - Rock Version
+      Thirdzy                             Skate Avenue PH ~ If Ever You're In My Arms Again, How Do I Live, I Knew I Loved You - Medley - Rock Version
+      EHST_J                              I'll Never Get Over You
+      Lofi Town                           Kaba (Lofi)
+      Dashtroyer                          Bumalik Kana Sakin Rock
+      葛揚忠                                 How Great Thou Art
+      葛揚忠                                 I Know Who Holds Tomorrow
+      葛揚忠                                 Thank You Jesus
+      葛揚忠                                 Hallelujah
+      葛揚忠                                 All To Jesus I Surrender
+      Leslie Johnson                      Wild Country Witch
+      V'arc                               Fire
+      N2J                                 พอใจเท่าที่มี ยินดีเท่าที่ได้
+      JAIOONGTONG MUSIC                   เสียงจากคนชายแดน
+      บุ๊ค ศุภกาญจน์                      เขยขี้เหล้า
+      Raven Astrid                        Valhalla’s Daughters | Raven Astrid | Viking Music Video
+      Junipaa                             Le Mulet
+      NorthWake                           No Throne Above Me | Powerful Viking Duet | Vikings Song
+      RagnaROCK                           Son of the Storm |  Epic Viking Rock Anthem | Ragnarock
+      Frost Valkyra                       Hear my Echo
+      RoxiLulla                           MIDNIGHT VALHALLA
+      Stormborn Echoes                    I Do Not Kneel
+      Othravar                            ÉG ER NJÖRÐR (feat. Ravnir)
+      VenoVerz                            No Fear Left
+      🔥 VenoVerz                          🔥 VenoVerz - One Shot | Powerful Motivational Hip-Hop Rap Song | Gym | Fitness | Workout Music 2025🎶
+      Roman Farmerman Simon               Do It From Your Heart
+      Jennifphyams                        Represent
+      Zion Within                         Low Lights
+      ... and 139 more (see rec_annotations.json)
+
+  ====================================================================

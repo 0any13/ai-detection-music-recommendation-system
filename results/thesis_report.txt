@@ -1,0 +1,217 @@
+
+========================================================================
+  MUSIC RECOMMENDATION SYSTEM -- EXPERIMENT RESULTS
+========================================================================
+    Bachelor's Thesis Analysis Report
+
+
+========================================================================
+  1. DATASET OVERVIEW
+========================================================================
+    Total job logs                             71
+    Labeled (ground truth present)             0
+      -> AI-generated songs                    0
+      -> Human-made songs (controls)           0
+    Unlabeled (no ground truth entry)          71
+
+    [!] 71 logs are unlabeled. Add entries to ground_truth.json
+    [!] to include them in classification metrics.
+
+  Submission Platform
+  ---------------------
+    spotify                                    50
+    youtube                                    12
+    search                                     9
+
+========================================================================
+  2. AI DETECTION SYSTEM EVALUATION
+========================================================================
+
+    The detection system assigns a probability p that a submitted track is AI-generated.
+    The binary threshold is p >= 35.0% = predicted AI, p < 35.0% = predicted human.
+
+    [!] No labeled logs with probability scores. Populate ground_truth.json.
+
+========================================================================
+  3. RECOMMENDATION PIPELINE PERFORMANCE
+========================================================================
+    Total logs                                 71
+    Completed (done)                           71
+    Errored                                    0
+    Incomplete / other                         0
+
+  Job Duration (seconds)
+  ------------------------
+    n                                          71
+    Mean                                       354.6s
+    Median                                     180.7s
+    Stdev                                      445.2s
+    Min                                        0.0s
+    Max                                        1929.0s
+
+  Duration Histogram
+  --------------------
+      0.0-193.0  | ############################ 37
+    193.0-386.0  | ########                     11
+    386.0-579.0  | #####                        7
+    579.0-772.0  | ###                          4
+    772.0-965.0  | ###                          4
+    965.0-1158.0 | ##                           3
+    1158.0-1351.0 |                              1
+    1351.0-1544.0 | #                            2
+    1544.0-1737.0 |                              1
+    1737.0-1930.0 |                              1
+
+  Recommendation Source Breakdown
+  ---------------------------------
+    Jobs using Hybrid recommender (MSD + CF)   3    (4.2%)
+    Jobs using Spotify Discovered-On fallback  32   (45.1%)
+    Jobs using YouTube fallback                7    (9.9%)
+    Jobs where input track found in MSD        3    (4.2%)
+
+  Recommendations per Job
+  -------------------------
+    Mean                                       5.2
+    Median                                     6.0
+    Jobs achieving target (>=10 recs)          28
+    Jobs below target (<10 recs)               15
+    Jobs with zero recommendations             28
+
+  AI Detection Latency (LetsSubmit call, seconds)
+  -------------------------------------------------
+    n                                          49
+    Mean                                       3.7s
+    Median                                     3.6s
+    Min                                        1.2s
+    Max                                        6.6s
+
+  API Quota
+  -----------
+    Jobs where LetsSubmit quota was exhausted  14 / 71
+
+  LetsSubmit Cache Effectiveness
+  --------------------------------
+    Cache hits                                 17
+    Cache misses                               49
+    Hit rate                                   25.76%
+
+========================================================================
+  4. RECOMMENDATION PURITY
+========================================================================
+    Purity measures what fraction of the system's recommendations are
+    confirmed human-made music (not AI-generated).
+
+  Volume
+  --------
+    Total recommendations across all jobs      368
+    Unique recommended artists                 216
+
+  Annotation Coverage
+  ---------------------
+    Confirmed human                            264   (71.7%)
+    Confirmed AI                               104    (28.3%)
+    Not yet annotated                          0     (0.0%)
+
+  Purity (annotated recommendations only)
+  -----------------------------------------
+    Confirmed human                            264
+    Confirmed AI (filter bypass)               104
+    Purity                                     0.7174  (71.7% of annotated are human)
+
+  Annotation Method Breakdown
+  -----------------------------
+    manual                                     367
+    blacklist                                  1
+
+  AI Recommendations That Bypassed the Human Filter
+  ---------------------------------------------------
+    [!] These represent false negatives of the recommendation filter.
+
+      GoldenRockStation                   Turn The Lights Off (90's Metal)
+      Kiraa                               don't look back
+      Kiraa                               stay right here with you
+      Elvira                              Insane
+      Kiraa                               don't know you
+      Kiraa                               why i feel this way
+      Elvira                              Break Away
+      Kiraa                               i don't wanna do this anymore
+      Elvira                              Something I'm Not
+      Kiraa                               something real
+      Elvira                              Gangster Love
+      UTP                                 UTP - Night Shift (Bass & Drift) (Bass Boosted)
+      Deadfolk Prophet                    HIGH HONEY DRIP
+      Country Lunatic                     Clean but Never Free
+      Georgia Phantom                     Built From Broken
+      Habib Ice                           Rise or die
+      LEMONEX                             We Set The Free
+      Naytiiv Tongue                      Exile
+      Naytiiv Tongue                      We Move Together
+      Naytiiv Tongue                      Forever Depends
+      Doc Raven                           Outlaw Heaven
+      Viggo Ironside                      In The Breach
+      Backroad and Harmony                Jelly Roll – Heaven Took You Early (NEW SONG 2026) | Country Song About Pain and Remembering You
+      Dust & Harmony                      You Problem
+      Britney Spears                      Britney Spears - Everytime (Epic Cinematic Orchestral Cover) | Haunting Solo Male Vocal - NovaTunes
+      Austin Blanchfill                   I RUN TO YOUR LIGHT
+      Oryn Etheria                        The Day Questions Began
+      TMH                                 TMH - Mafia Style [GANGSTER TRAP]
+      HUGEL x SOLTO                       HUGEL x SOLTO - Jamaican (Bam Bam… x Madonna - La Isla Bonita (Coffee Afro House Mashup)
+      Version longue de la musique DJ 1900 Version longue de la musique DJ 1900 - Monte le son 🔥
+      Kowshik Saha                        Beggin'
+      CosmicJelly                         Summer Days
+      Eliana Freya                        Sin Miedo A Querer
+      Mr.King                             Iron Bell Whisper
+      Kaia North                          hollow quiet.
+      Talisa Nayra                        In te perdo meas vias
+      Talisa Nayra                        Baila Conmigo
+      The Jazz House                      Room Without a Clock - 1940s Jazz
+      The Jazz House                      Last Call Philosophy
+      The Jazz House                      Waves Upon My Heart - 1940s Jazz
+      The Jazz House                      Krieg und Liebe - 1940s German Jazz
+      The Jazz House                      Ivresse à la Tour Eiffel - 1940s French Jazz
+      Shifty Brent                        Superman - Soul Cover
+      Soul'd Out                          Many Men - 1950's Soul Version
+      Soul'd Out                          In Da Club - 1950's Soul Version
+      Soul'd Out                          Gangsta's Paradise - 1950's Soul Version
+      Soul'd Out                          Forgot About Dre - 1950's Soul Version
+      Soul'd Out                          Changes - 1950's Soul Version
+      Crystal Sound Studios               Many Men (Blood in my eye)
+      Shifty Brent                        California Love – 1950's Soul (Speed Up)
+      Soul'd Out                          Dear Mama - 1950's Soul Version
+      Matthew Kalyani                     Shadow of My Own Heart
+      Blue Hue                            A Lighthouse (feat. Christina Barrett)
+      Rocky Lane                          Nowhere Bound
+      FazerleX                            Still Me
+      MAELOU VISION                       ZAY-Rock Button Ft.Lu1Gang
+      Dethlord                            THE BEST PART OF MY DAY IS FUCKING YOURS UP
+      SNY                                 SNY - Wolves Don't Sleep
+      FLORÉN FLO Beats                    SCARFACE (Original Version)
+      MOW                                 MOW - LOCK IT DOWN (GANGSTER TRAP)
+      Upper Vibe Media Presents           Neural Drip (feat. iami)
+      Crow Wilder                         America Baby
+      JD Steel                            Tell The Devil I'm Busy
+      Peter Gsteu                         Winter Is Coming
+      Peter Gsteu                         I'm All In
+      Peter Gsteu                         Bullet in My Head
+      Peter Gsteu                         It's Raining
+      Peter Gsteu                         Love's a Crime Scene
+      Skate Avenue PH                     Love Moves in Mysterious Ways
+      Skate Avenue PH                     Let Me Be the One
+      Skate Avenue PH                     Once in a Lifetime
+      Skate Avenue PH                     Don't Dream It's Over
+      Skate Avenue PH                     I'll Be
+      Skate Avenue PH                     Never Had a Dream Come True
+      Thirdzy                             Mr. Kupido, Mahal Ka Sa Akin, I Need You - Medley - Rock Version
+      Freedom Prisoner                    Freedom Prisoner - Override: Humanity (Alternative Rock Demo)
+      Pandemonic Vibes                    Pandemonic Vibes - Synthetic Feelings (Official Music Video) - Industrial Music About AI Dating
+      Bourbon Sons                        Thunderstruck
+      Game of Thrones                     Game of Thrones - A Song of Napalm (Parody Music Video)
+      Lord of the Rings                   Lord of the Rings - The Fellowship of 'Nam (Parody Music Video)
+      Pirates of the Caribbean            Pirates of the Caribbean - The Curse of 'Nam (Parody Music Video)
+      Harry Potter                        Harry Potter - Biker Wizard (Parody Music Video)
+      Breaking Bad                        Breaking Bad - I Am The Napalm (Parody Music Video)
+      Avengers                            Avengers - Vietnam War (Parody Music Video)
+      James Bond                          James Bond - Rednecks are Forever (Adult Music Video)
+      ... and 64 more (see rec_annotations.json)
+
+  ====================================================================
